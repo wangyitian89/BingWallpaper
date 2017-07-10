@@ -1,0 +1,2 @@
+all:
+	sh BingWallpaper.sh
