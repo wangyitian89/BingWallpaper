@@ -4,8 +4,8 @@
 # 11 11 * * * sh /project/BingWallpaper.sh > /dev/null 2>&1
 # 02 18 10,20,30 * * find /tmp/ -type f -name "BingWallpaper*" -ctime +40 -delete > /dev/null 2>&1
 
-download_dir='~/Pictures/bing'
-bing_wallpaper_urls_log='~/Pictures/photo_urls.log'
+download_dir=$HOME'/Pictures/bing'
+bing_wallpaper_urls_log=$HOME'/Pictures/photo_urls.log'
 log_file='/tmp/BingWallpaper.log.'`date "+%Y%m"`
 
 mkdir -p $download_dir
@@ -69,7 +69,7 @@ zh-TW
 wallpaper_urls=''
 for lang in $langs
 do
-    bing_url="http://global.bing.com/HPImageArchive.aspx?format=js&idx=30&n=12&setmkt=${lang}"
+    bing_url="http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&n=12&setmkt=${lang}"
 
     wallpaper_urls=$(get_photo_urls $bing_url)" ${wallpaper_urls}"
 done
