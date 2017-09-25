@@ -1,25 +1,18 @@
 #!/bin/bash - 
+source ~/bin/bash-logger.sh # https://github.com/wangyitian89/bash-logger.git
 
 # crontab
 # 11 11 * * * sh /project/BingWallpaper.sh > /dev/null 2>&1
 # 02 18 10,20,30 * * find /tmp/ -type f -name "BingWallpaper*" -ctime +40 -delete > /dev/null 2>&1
 
+export LOGFILE=/tmp/BingWallpaper.log.`date "+%Y%m"`
+export LOG_DATE_FORMAT='+%F %T'                         # Eg: 2014-09-07 21:51:57
+export LOG_FORMAT='%DATE %PID [%LEVEL] %MESSAGE'
+
 download_dir=$HOME'/Pictures/bing'
 bing_wallpaper_urls_log=$HOME'/Pictures/photo_urls.log'
-log_file='/tmp/BingWallpaper.log.'`date "+%Y%m"`
 
 mkdir -p $download_dir
-
-log () {
-    msg=$1
-    logfile=$2
-    time=`date "+%Y-%m-%d %H:%M:%S"`
-    if [ "x$log_file" == "x" ]; then
-        echo "[$time] $msg"
-    else
-        echo "[$time] $msg" >> $logfile
-    fi
-}
 
 download_from_url () {
 	curl -sL $1 
@@ -77,7 +70,7 @@ done
 
 # uniq wallpapers by name like /az/hprichbg/rb/EternalFlame_1920x1080.jpg
 wallpaper_urls=`echo ${wallpaper_urls} | tr ' ' '\n' | awk -F '_' '{a[$1"_"$3]=$0}END{for (filename in a) print a[filename]}'`
-log "${wallpaper_urls}" $log_file
+DEBUG "${wallpaper_urls}"
 
 # download each wallpaper
 for url in $wallpaper_urls
@@ -90,11 +83,9 @@ do
 
     if [ -e $wallpaper ]
     then
-        log "$wallpaper is exits!" $log_file
-        log "all:\t$url" $bing_wallpaper_urls_log
+        INFO "exist\t$url\t$wallpaper"
         continue
     fi
-    log "new:\t$url\t$wallpaper" $bing_wallpaper_urls_log
     download_from_url $url > $wallpaper
-    log "$wallpaper is downloaded successed from $url!" $log_file
+    INFO "new\t$url\t$wallpaper"
 done

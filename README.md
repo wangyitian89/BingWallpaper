@@ -2,6 +2,7 @@
 
 **下载全球 bing 首页的桌面图片，但请勿用于商业用途。**
 
+1. 使用 https://github.com/wangyitian89/bash-logger.git
 
 1. 简单的 shell 脚本，需要自行设置保存桌面壁纸的位置，并设置 crontab。
 
