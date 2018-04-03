@@ -14,6 +14,11 @@ bing_wallpaper_urls_log=$HOME'/Pictures/photo_urls.log'
 
 mkdir -p $download_dir
 
+function hash() {
+    local path=$1
+    echo $path | md5 | head -c 1
+}
+
 download_from_url () {
 	curl -sL $1 
 }
@@ -69,7 +74,7 @@ done
 # wallpaper url is like /az/hprichbg/rb/EternalFlame_EN-CA10974314579_1920x1080.jpg
 
 # uniq wallpapers by name like /az/hprichbg/rb/EternalFlame_1920x1080.jpg
-wallpaper_urls=`echo ${wallpaper_urls} | tr ' ' '\n' | awk -F '_' '{a[$1"_"$3]=$0}END{for (filename in a) print a[filename]}'`
+wallpaper_urls=`echo ${wallpaper_urls} | tr ' ' '\n' | awk -F '_' '{a[$1"_"$3]=$0}END{for (filename in a) print a[filename]}' | tr '\n' ' '`
 DEBUG "${wallpaper_urls}"
 
 # download each wallpaper
@@ -79,7 +84,9 @@ do
 
     # http://www.bing.com/az/hprichbg/rb/EternalFlame_EN-CA10974314579_1920x1080.jpg =>
     # $download_dir/EternalFlame_1920x1080.jpg
-    wallpaper=$download_dir/`echo $url | tr "/" "\n" | grep jpg | awk -F '_' '{print $1 "_"$3}'`
+    file=`echo $url | tr "/" "\n" | grep jpg | awk -F '_' '{print $1 "_"$3}'`
+    hash_dir=`hash $file`
+    wallpaper=$download_dir/$hash_dir/$file
 
     if [ -e $wallpaper ]
     then
