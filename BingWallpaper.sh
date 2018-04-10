@@ -1,5 +1,6 @@
 #!/bin/bash - 
 source ~/bin/bash-logger.sh # https://github.com/wangyitian89/bash-logger.git
+MD5=/sbin/md5
 
 # crontab
 # 11 11 * * * sh /project/BingWallpaper.sh > /dev/null 2>&1
@@ -16,7 +17,7 @@ mkdir -p $download_dir
 
 function hash() {
     local path=$1
-    echo $path | md5 | head -c 1
+    echo $path | $MD5 | head -c 1
 }
 
 download_from_url () {
