@@ -1,4 +1,4 @@
-#!/bin/bash - 
+#!/bin/bash -
 source ~/bin/bash-logger.sh # https://github.com/wangyitian89/bash-logger.git
 MD5=/sbin/md5
 
@@ -21,7 +21,7 @@ function hash() {
 }
 
 download_from_url () {
-	curl -sL $1 
+	curl -sL $1
 }
 
 get_photo_urls () {
@@ -53,8 +53,6 @@ it-IT
 ja-JP
 ko-KR
 nb-NO
-nl-BE
-nl-NL
 pl-PL
 pt-BR
 ru-RU
@@ -75,7 +73,7 @@ done
 # wallpaper url is like /az/hprichbg/rb/EternalFlame_EN-CA10974314579_1920x1080.jpg
 
 # uniq wallpapers by name like /az/hprichbg/rb/EternalFlame_1920x1080.jpg
-wallpaper_urls=`echo ${wallpaper_urls} | tr ' ' '\n' | awk -F '_' '{a[$1"_"$3]=$0}END{for (filename in a) print a[filename]}' | tr '\n' ' '`
+wallpaper_urls=$(echo ${wallpaper_urls} | tr ' ' '\n' | awk -F '_' '{a[$1"_"$3]=$0}END{for (filename in a) print a[filename]}' | tr '\n' ' ')
 DEBUG "${wallpaper_urls}"
 
 # download each wallpaper
@@ -85,8 +83,10 @@ do
 
     # http://www.bing.com/az/hprichbg/rb/EternalFlame_EN-CA10974314579_1920x1080.jpg =>
     # $download_dir/EternalFlame_1920x1080.jpg
-    file=`echo $url | tr "/" "\n" | grep jpg | awk -F '_' '{print $1 "_"$3}'`
-    hash_dir=`hash $file`
+
+    # th?id=OHR.HelixPomatia_ZH-CN9785223494_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp
+    file=$(echo $url | sed 's/th?id=OHR.//' | tr "/&" "\n"  | grep jpg | grep -v '=' | awk -F '_' '{print $1 "_"$3}')
+    hash_dir=$(hash $file)
     wallpaper=$download_dir/$hash_dir/$file
 
     if [ -e $wallpaper ]
